@@ -1,6 +1,6 @@
 {%- for path in duplicity_included_files -%}
-+ path
-{%- endfor -%}
-{%- for path in duplicity_exclueded_files -%}
-- path
-{%- endfor -%}
++ {{ path }}
+{% endfor %}
+{%- for path in duplicity_excluded_files -%}
+- {{ path }}
+{% endfor %}
