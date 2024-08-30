@@ -8,3 +8,4 @@ duplicity_included_files: []
 duplicity_exclueded_files: []
 duplicity_working_dir: "~/"
 duplicity_backup_script: ""
+duplicity_mailaddr: ""
