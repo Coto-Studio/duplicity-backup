@@ -15,8 +15,8 @@
 
 - name: Ensure env file config is present
   template:
-    src: templates/duplicity.j2
-    dest: "{{duplicity_working_dir}}/{{ env_file }}"
+    src: templates/duplicity-envs.j2
+    dest: "{{duplicity_working_dir}}/{{ duplicity_env_file }}"
     mode: "0600"
 
 - name: Ensure include-list is present
@@ -33,7 +33,7 @@
 
 - name: Ensure restore script is present
   template:
-    src: templates/duplicity-restore-backup.j2
+    src: templates/duplicity-script-restore.j2
     dest: "{{ duplicity_working_dir }}/{{ duplicity_restore_script }}"
     mode: u+rx
 

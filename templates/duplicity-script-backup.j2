@@ -1,7 +1,10 @@
 #!/bin/bash
+## Script to backup files to b2
+## Based off of: https://davidkeen.com/blog/2017/09/backup-your-server-to-backblaze-b2-with-duplicity/
+
 # Export some ENV variables so you don't have to type anything
-source {{duplicity_working_dir}}/{{ env_file }}
-export $(cut -d= -f1 {{duplicity_working_dir}}/{{ env_file }})
+source {{duplicity_working_dir}}/{{ duplicity_env_file }}
+export $(cut -d= -f1 {{duplicity_working_dir}}/{{ duplicity_env_file }})
 
 # The b2 destination
 BUCKET_DIR=$(/usr/bin/hostname -f | /usr/bin/sed 's/\./-/g')
@@ -74,5 +77,5 @@ if [ $is_running -eq 0 ]; then
   cat "$DAILYLOGFILE" >> $LOGFILE
 
   # Reset the ENV variables. Don't need them sitting around
-  unset $(cut -d= -f1 {{duplicity_working_dir}}/{{ env_file }})
+  unset $(cut -d= -f1 {{duplicity_working_dir}}/{{ duplicity_env_file }})
 fi
