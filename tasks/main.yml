@@ -11,6 +11,7 @@
     name:
       - botocore
       - boto3
+      - b2sdk
 
 - name: Ensure .duplicity config is correct
   template:
@@ -27,7 +28,6 @@
 - name: Ensure cronjob is present
   ansible.builtin.cron:
     name: "run duplicity backup"
-    weekday: "5"
     minute: "0"
     hour: "1"
     job: "{{ duplicity_backup_script }}"

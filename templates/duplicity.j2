@@ -1,5 +1,3 @@
-PASSPHRASE="{{ duplicity_passphrase }}"
-KEY_ID="{{ duplicity_key_id }}"
-ACCESS_KEY="{{ duplicity_access_key }}"
-ENDPOINT="{{ duplicity_endpoint }}"
-MAILADDR="{{ duplicity_mailaddr }}"
+{%- for env in duplicity_envs -%}
+{{ env }}
+{% endfor %}
