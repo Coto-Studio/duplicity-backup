@@ -4,4 +4,7 @@ duplicity_envs: []
 duplicity_included_files: []
 duplicity_exclueded_files: []
 duplicity_working_dir: "~/"
-duplicity_backup_script: ""
+duplicity_backup_script: "duplicity-backup.sh"
+duplicity_restore_script: "duplicity-restore.sh"
+duplicity_env_file: ".duplcitiy"
+duplicity_include_file: ".include-list"

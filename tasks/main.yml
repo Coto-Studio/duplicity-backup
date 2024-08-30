@@ -13,17 +13,29 @@
       - boto3
       - b2sdk
 
-- name: Ensure .duplicity config is correct
+- name: Ensure env file config is present
   template:
     src: templates/duplicity.j2
-    dest: "{{ duplicity_working_dir }}/.duplicity"
+    dest: "{{duplicity_working_dir}}/{{ env_file }}"
     mode: "0600"
 
-- name: Ensure .include-list config is correct
+- name: Ensure include-list is present
   template:
     src: templates/include-list.j2
-    dest: "{{ duplicity_working_dir }}/.include-list"
+    dest: "{{ duplicity_working_dir }}/{{ duplicity_include_file }}"
     mode: "0600"
+
+- name: Ensure backup script is present
+  template:
+    src: templates/duplicity-script-backup.j2
+    dest: "{{ duplicity_working_dir }}/{{ duplicity_backup_script }}"
+    mode: u+rx
+
+- name: Ensure restore script is present
+  template:
+    src: templates/duplicity-restore-backup.j2
+    dest: "{{ duplicity_working_dir }}/{{ duplicity_restore_script }}"
+    mode: u+rx
 
 - name: Ensure cronjob is present
   ansible.builtin.cron:
