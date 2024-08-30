@@ -31,4 +31,4 @@
     minute: "0"
     hour: "1"
     job: "{{ duplicity_backup_script }}"
-  when: backup_script
+  when: duplicity_backup_script
