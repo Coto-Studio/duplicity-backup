@@ -41,7 +41,7 @@ if [ $is_running -eq 0 ]; then
   }
 
   # How long to keep backups for
-  OLDER_THAN="30D"
+  OLDER_THAN="{{ duplicity_keep_backups_for }}"
 
   # The source of your backup
   SOURCE=/
