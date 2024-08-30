@@ -1,2 +1,34 @@
 ---
 # tasks file for duplicity-backup
+- name: Ensure duplicity is installed
+  become: true
+  package:
+    name: duplicity
+    state: present
+
+- name: Ensure required python3 packages are installed
+  pip:
+    name:
+      - botocore
+      - boto3
+
+- name: Ensure .duplicity config is correct
+  template:
+    src: templates/duplicity.j2
+    dest: "{{ duplicity_working_dir }}/.duplicity"
+    mode: "0600"
+
+- name: Ensure .include-list config is correct
+  template:
+    src: templates/include-list.j2
+    dest: "{{ duplicity_working_dir }}/.include-list"
+    mode: "0600"
+
+- name: Ensure cronjob is present
+  ansible.builtin.cron:
+    name: "run duplicity backup"
+    weekday: "5"
+    minute: "0"
+    hour: "1"
+    job: "{{ duplicity_backup_script }}"
+  when: backup_script
