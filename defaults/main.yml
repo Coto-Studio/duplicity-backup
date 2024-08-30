@@ -1,8 +1,8 @@
 ---
 # defaults file for duplicity-backup
 duplicity_passphrase: ""
-duplicity_aws_access_key_id: ""
-duplicity_aws_secret_access_key: ""
+duplicity_key_id: ""
+duplicity_access_key: ""
 duplicity_endpoint: ""
 duplicity_included_files: []
 duplicity_exclueded_files: []
