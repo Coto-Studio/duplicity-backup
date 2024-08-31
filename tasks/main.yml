@@ -17,12 +17,14 @@
   template:
     src: templates/duplicity-envs.j2
     dest: "{{duplicity_working_dir}}/{{ duplicity_env_file }}"
+    owner: root
     mode: "0600"
 
 - name: Ensure include-list is present
   template:
     src: templates/include-list.j2
     dest: "{{ duplicity_working_dir }}/{{ duplicity_include_file }}"
+    owner: root
     mode: "0600"
 
 - name: Ensure backup script is present
@@ -42,5 +44,6 @@
     name: "run duplicity backup"
     minute: "0"
     hour: "1"
-    job: "{{ duplicity_backup_script }}"
+    user: root
+    job: "{{ duplicity_working_dir }}/{{ duplicity_backup_script }}"
   when: duplicity_backup_script
