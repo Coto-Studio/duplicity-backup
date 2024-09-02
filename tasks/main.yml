@@ -46,5 +46,18 @@
     minute: "{{ duplicity_cron_minute | default('0')}}"
     hour: "{{ duplicity_cron_hour | default('0')}}"
     user: root
-    job: "{{ duplicity_working_dir }}/{{ duplicity_settings['restore_script_name'] }}"
+    job: "{{ duplicity_working_dir }}/{{ duplicity_restore_script }}"
   when: duplicity_backup_script
+
+- name: Set duplicity_dest
+  set_fact:
+    duplicity_dest: "b2://{{ duplicity_key_id }}:{{ duplicity_access_key }}@{{ duplicity_bucket }}/{{ ansible_nodename | regex_replace('.', '-') }}"
+  when: duplicity_run_full_backup
+
+- name: Run full backup
+  command:
+    cmd: |
+      duplicity \
+      --include-filelist {{ duplicity_working_dir }}/{{ duplicity_include_file }} \
+      / {{ duplicity_dest }}
+  when: duplicity_run_full_backup
