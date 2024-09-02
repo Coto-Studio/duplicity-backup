@@ -3,27 +3,27 @@
 ## Based off of: https://davidkeen.com/blog/2017/09/backup-your-server-to-backblaze-b2-with-duplicity/
 
 # Export some ENV variables so you don't have to type anything
-source {{duplicity_working_dir}}/{{ duplicity_env_file }}
-export $(cut -d= -f1 {{duplicity_working_dir}}/{{ duplicity_env_file }})
+source {{ duplicity_working_dir }}/{{ duplicity_env_file }}
+export $(cut -d= -f1 {{ duplicity_working_dir }}/{{ duplicity_env_file }})
 
 # The b2 destination
 BUCKET_DIR=$(/usr/bin/hostname -f | /usr/bin/sed 's/\./-/g')
 DEST="b2://$KEY_ID:$ACCESS_KEY@$BUCKET/$BUCKET_DIR"
 
 # Set up some variables for logging
-LOGDIR="/var/log/duplicity/"
+LOGDIR="{{ duplicity_log_dir }}"
 LOGFILE="$LOGDIR/backup.log"
 DAILYLOGFILE="$LOGDIR/backup.daily.log"
 FULLBACKLOGFILE="$LOGDIR/backup.full.log"
-INCLUDELIST="{{duplicity_working_dir}}/{{ duplicity_include_file }}"
+INCLUDELIST="{{ duplicity_working_dir }}/{{ duplicity_include_file }}"
 HOST=`hostname`
 DATE=`date +%Y-%m-%d`
 TODAY=$(date +%d%m%Y)
 
 is_running=$(ps -ef | grep duplicity  | grep python | wc -l)
 
-if [ ! -d  ];then
-  mkdir -p /var/log/duplicity
+if [ ! -d $LOGDIR ];then
+  mkdir -p $LOGDIR
 fi
 
 if [ ! -f $FULLBACKLOGFILE ]; then
@@ -42,6 +42,9 @@ if [ $is_running -eq 0 ]; then
 
   # How long to keep backups for
   OLDER_THAN="{{ duplicity_keep_backups_for }}"
+  
+  # Run a full back after
+  FULL_BACKUP_AFTER="{{ duplicity_full_backup_after }}"
 
   # The source of your backup
   SOURCE=/
@@ -51,7 +54,7 @@ if [ $is_running -eq 0 ]; then
 
   trace "Backing up files..."
   duplicity \
-    --full-if-older-than 7D \
+    --full-if-older-than ${FULL_BACKUP_AFTER} \
     --include-filelist ${INCLUDELIST} \
     ${SOURCE} ${DEST} >> ${DAILYLOGFILE} 2>&1
 
@@ -77,5 +80,5 @@ if [ $is_running -eq 0 ]; then
   cat "$DAILYLOGFILE" >> $LOGFILE
 
   # Reset the ENV variables. Don't need them sitting around
-  unset $(cut -d= -f1 {{duplicity_working_dir}}/{{ duplicity_env_file }})
+  unset $(cut -d= -f1 {{ duplicity_working_dir }}/{{ duplicity_env_file }})
 fi

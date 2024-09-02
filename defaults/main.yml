@@ -1,11 +1,20 @@
 ---
 # defaults file for duplicity-backup
-duplicity_envs: []
+duplicity_run_backup: false
+duplicity_restore_all: false
 duplicity_included_files: []
 duplicity_exclueded_files: []
 duplicity_working_dir: "~/"
+duplicity_log_dir: /var/log/duplicity/
 duplicity_backup_script: "duplicity-backup.sh"
 duplicity_restore_script: "duplicity-restore.sh"
 duplicity_env_file: ".duplcitiy"
 duplicity_include_file: ".include-list"
 duplicity_keep_backups_for: "30D"
+duplicity_full_backup_after: "7D"
+duplicity_passphrase: ""
+duplicity_endpoint: ""
+duplicity_bucket: ""
+duplicity_key_id: ""
+duplicity_access_key: ""
+duplicity_mailaddr: ""

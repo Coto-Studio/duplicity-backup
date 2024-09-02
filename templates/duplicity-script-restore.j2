@@ -1,10 +1,10 @@
 #!/bin/bash
 # Export some ENV variables so you don't have to type anything
-source {{duplicity_working_dir}}/{{ duplicity_env_file }}
-export $(cut -d= -f1 {{duplicity_working_dir}}/{{ duplicity_env_file }})
+source {{ duplicity_working_dir }}/{{ duplicity_env_file }}
+export $(cut -d= -f1 {{ duplicity_working_dir }}/{{ duplicity_env_file }})
 
 # The b2 destination
-BUCKET=$(/usr/bin/hostname -f | /usr/bin/sed 's/\./-/g')
+BUCKET_DIR=$(/usr/bin/hostname -f | /usr/bin/sed 's/\./-/g')
 DEST="b2://$KEY_ID:$ACCESS_KEY@$BUCKET/$BUCKET_DIR"
 
 # Your GPG key
@@ -16,4 +16,4 @@ echo "duplicity --file-to-restore=$1 ${DEST} $2"
 duplicity --file-to-restore=$1 ${DEST} $2
 
 # Reset the ENV variables. Don't need them sitting around
-unset $(cut -d= -f1 {{duplicity_working_dir}}/{{ duplicity_env_file }})
+unset $(cut -d= -f1 {{ duplicity_working_dir }}/{{ duplicity_env_file }})
