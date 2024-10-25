@@ -46,7 +46,7 @@
     minute: "{{ duplicity_cron_minute | default('0')}}"
     hour: "{{ duplicity_cron_hour | default('0')}}"
     user: root
-    job: "{{ duplicity_working_dir }}/{{ duplicity_restore_script }}"
+    job: "{{ duplicity_working_dir }}/{{ duplicity_backup_script }}"
   when: duplicity_backup_script
 
 - name: Set duplicity_dest
