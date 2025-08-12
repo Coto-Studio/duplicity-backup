@@ -53,7 +53,7 @@ if [ $is_running -eq 0 ]; then
   trace "------------------------------------"
 
   trace "Backing up files..."
-  duplicity \
+  duplicity backup \
     --full-if-older-than ${FULL_BACKUP_AFTER} \
     --include-filelist ${INCLUDELIST} \
     ${SOURCE} ${DEST} >> ${DAILYLOGFILE} 2>&1

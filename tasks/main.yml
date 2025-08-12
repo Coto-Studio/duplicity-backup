@@ -25,7 +25,7 @@
       - rclone
       - rsync
       - rdiff
-      - tzda
+      - tzdata
     state: present
 
 - name: Ensure required python3 packages are installed
