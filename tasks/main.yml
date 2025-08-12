@@ -51,7 +51,7 @@
 
 - name: Set duplicity_dest
   set_fact:
-    duplicity_dest: "b2://{{ duplicity_key_id }}:{{ duplicity_access_key }}@{{ duplicity_bucket }}/{{ ansible_nodename | regex_replace('.', '-') }}"
+    duplicity_dest: "b2://{{ duplicity_key_id }}:{{ duplicity_access_key }}@{{ duplicity_bucket }}/{{ ansible_nodename | regex_replace('.', '-') }}/duplicity"
   when: duplicity_run_full_backup
 
 - name: Run full backup

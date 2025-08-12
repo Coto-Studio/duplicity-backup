@@ -7,8 +7,8 @@ source {{ duplicity_working_dir }}/{{ duplicity_env_file }}
 export $(cut -d= -f1 {{ duplicity_working_dir }}/{{ duplicity_env_file }})
 
 # The b2 destination
-BUCKET_DIR=$(/usr/bin/hostname -f | /usr/bin/sed 's/\./-/g')
-DEST="b2://$KEY_ID:$ACCESS_KEY@$BUCKET/$BUCKET_DIR"
+SERVER_DIR=$(/usr/bin/hostname -f | /usr/bin/sed 's/\./-/g')
+DEST="b2://$KEY_ID:$ACCESS_KEY@$BUCKET/$SERVER_DIR/duplicity"
 
 # Set up some variables for logging
 LOGDIR="{{ duplicity_log_dir }}"
