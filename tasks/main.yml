@@ -1,9 +1,31 @@
 ---
 # tasks file for duplicity-backup
-- name: Ensure duplicity is installed
+- name: Ensure duplicity is not installed
   become: true
   package:
     name: duplicity
+    state: absent
+
+- name: Ensure dependency packages are installed
+  become: true
+  package:
+    name:
+      - build-essential
+      - intltool
+      - lftp
+      - librsync-dev
+      - libffi-dev
+      - libssl-dev
+      - openssl
+      - par2
+      - python3-dev
+      - python3-pip
+      - python3-venv
+      - python3
+      - rclone
+      - rsync
+      - rdiff
+      - tzda
     state: present
 
 - name: Ensure required python3 packages are installed
@@ -12,6 +34,14 @@
       - botocore
       - boto3
       - b2sdk
+      - pipx
+    state: latest
+
+- name: Ensure duplicity is installed
+  community.general.pipx:
+    name: duplicity
+    global: true
+    state: latest
 
 - name: Ensure env file config is present
   template:
