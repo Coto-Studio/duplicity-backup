@@ -2,6 +2,7 @@
 # defaults file for duplicity-backup
 duplicity_run_full_backup: false
 duplicity_restore_all: false
+duplicity_verify_files: true
 duplicity_included_files: []
 duplicity_exclueded_files: []
 duplicity_working_dir: "~/"

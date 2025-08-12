@@ -58,8 +58,12 @@ if [ $is_running -eq 0 ]; then
     --include-filelist ${INCLUDELIST} \
     ${SOURCE} ${DEST} >> ${DAILYLOGFILE} 2>&1
 
+{% if duplicity_verify_files %}
   trace "Verifying files..."
-  duplicity verify ${DEST} ${SOURCE}
+  duplicity verify \
+    --include-filelist ${INCLUDELIST} \
+    ${DEST} ${SOURCE}
+{% endif %}
 
   trace "Removing old backups..."
   duplicity remove-older-than ${OLDER_THAN} --force ${DEST} >> ${DAILYLOGFILE} 2>&1
