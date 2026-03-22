@@ -2,6 +2,9 @@
 ## Script to backup files to b2
 ## Based off of: https://davidkeen.com/blog/2017/09/backup-your-server-to-backblaze-b2-with-duplicity/
 
+# Ensure pipx-installed binaries are on PATH (cron uses minimal PATH)
+export PATH="/usr/local/bin:$PATH"
+
 # Export some ENV variables so you don't have to type anything
 source {{ duplicity_working_dir }}/{{ duplicity_env_file }}
 export $(cut -d= -f1 {{ duplicity_working_dir }}/{{ duplicity_env_file }})

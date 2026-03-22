@@ -1,4 +1,7 @@
 #!/bin/bash
+# Ensure pipx-installed binaries are on PATH (cron uses minimal PATH)
+export PATH="/usr/local/bin:$PATH"
+
 # Export some ENV variables so you don't have to type anything
 source {{ duplicity_working_dir }}/{{ duplicity_env_file }}
 export $(cut -d= -f1 {{ duplicity_working_dir }}/{{ duplicity_env_file }})
