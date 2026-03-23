@@ -28,20 +28,27 @@
       - tzdata
     state: present
 
-- name: Ensure required python3 packages are installed
-  pip:
-    name:
-      - botocore
-      - boto3
-      - b2sdk
-      - pipx
-    state: latest
+- name: Ensure pipx is installed
+  become: true
+  package:
+    name: pipx
+    state: present
 
 - name: Ensure duplicity is installed
   community.general.pipx:
     name: duplicity
     global: true
     state: latest
+
+- name: Inject duplicity dependencies into pipx virtualenv
+  community.general.pipx:
+    name: duplicity
+    global: true
+    state: inject
+    inject_packages:
+      - boto3
+      - botocore
+      - b2sdk
 
 - name: Ensure env file config is present
   template:
