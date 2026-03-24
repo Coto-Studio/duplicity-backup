@@ -60,27 +60,38 @@ if [ $is_running -eq 0 ]; then
     --full-if-older-than ${FULL_BACKUP_AFTER} \
     --include-filelist ${INCLUDELIST} \
     ${SOURCE} ${DEST} >> ${DAILYLOGFILE} 2>&1
+  BACKUP_RC=$?
 
 {% if duplicity_verify_files %}
-  trace "Verifying files..."
-  duplicity verify \
-    --include-filelist ${INCLUDELIST} \
-    ${DEST} ${SOURCE}
+  if [ $BACKUP_RC -eq 0 ]; then
+    trace "Verifying files..."
+    duplicity verify \
+      --include-filelist ${INCLUDELIST} \
+      ${DEST} ${SOURCE} >> ${DAILYLOGFILE} 2>&1
+  else
+    trace "Backup failed (exit code $BACKUP_RC), skipping verification"
+  fi
 {% endif %}
 
-  trace "Removing old backups..."
-  duplicity remove-older-than ${OLDER_THAN} --force ${DEST} >> ${DAILYLOGFILE} 2>&1
+  if [ $BACKUP_RC -eq 0 ]; then
+    trace "Removing old backups..."
+    duplicity remove-older-than ${OLDER_THAN} --force ${DEST} >> ${DAILYLOGFILE} 2>&1
+  else
+    trace "Backup failed (exit code $BACKUP_RC), skipping cleanup to preserve existing backups"
+  fi
 
   trace "Backup for local filesystem complete"
   trace "------------------------------------"
- 
+
   # Send the daily log file by email
-  cat "$DAILYLOGFILE" | mail -s "Duplicity Backup Log for $HOST - $DATE" $MAILADDR
   BACKUPSTATUS=`cat "$DAILYLOGFILE" | grep Errors | awk '{ print $2 }'`
-  if [ "$BACKUPSTATUS" != "0" ]; then
-   cat "$DAILYLOGFILE" | mail -s "Duplicity Backup Log for $HOST - $DATE" $MAILADDR
-  elif [ "$FULL" = "full" ]; then
-    echo "$(date +%d%m%Y_%T) Full Back Done" >> $FULLBACKLOGFILE
+  if [ $BACKUP_RC -ne 0 ] || [ "$BACKUPSTATUS" != "0" ]; then
+    cat "$DAILYLOGFILE" | mail -s "FAILED: Duplicity Backup Log for $HOST - $DATE" $MAILADDR
+  else
+    cat "$DAILYLOGFILE" | mail -s "Duplicity Backup Log for $HOST - $DATE" $MAILADDR
+    if [ "$FULL" = "full" ]; then
+      echo "$(date +%d%m%Y_%T) Full Back Done" >> $FULLBACKLOGFILE
+    fi
   fi
   
   # Append the daily log file to the main log file
