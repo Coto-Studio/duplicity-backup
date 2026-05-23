@@ -1,5 +1,6 @@
 ---
 # defaults file for duplicity-backup
+duplicity_version: ""  # pin to a known-good version, e.g. "3.0.4"; empty = install latest
 duplicity_run_full_backup: false
 duplicity_restore_all: false
 duplicity_verify_files: true

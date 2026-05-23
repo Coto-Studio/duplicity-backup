@@ -55,8 +55,13 @@ if [ $is_running -eq 0 ]; then
   trace "Backup for local filesystem started"
   trace "------------------------------------"
 
+  # GPG 2.x routes symmetric encryption through gpg-agent; loopback pinentry
+  # lets duplicity supply PASSPHRASE without an interactive agent session.
+  GPG_OPTS="--pinentry-mode loopback"
+
   trace "Backing up files..."
   duplicity backup \
+    --gpg-options="${GPG_OPTS}" \
     --full-if-older-than ${FULL_BACKUP_AFTER} \
     --include-filelist ${INCLUDELIST} \
     ${SOURCE} ${DEST} >> ${DAILYLOGFILE} 2>&1
@@ -66,6 +71,7 @@ if [ $is_running -eq 0 ]; then
   if [ $BACKUP_RC -eq 0 ]; then
     trace "Verifying files..."
     duplicity verify \
+      --gpg-options="${GPG_OPTS}" \
       --include-filelist ${INCLUDELIST} \
       ${DEST} ${SOURCE} >> ${DAILYLOGFILE} 2>&1
   else
@@ -75,7 +81,9 @@ if [ $is_running -eq 0 ]; then
 
   if [ $BACKUP_RC -eq 0 ]; then
     trace "Removing old backups..."
-    duplicity remove-older-than ${OLDER_THAN} --force ${DEST} >> ${DAILYLOGFILE} 2>&1
+    duplicity remove-older-than ${OLDER_THAN} --force \
+      --gpg-options="${GPG_OPTS}" \
+      ${DEST} >> ${DAILYLOGFILE} 2>&1
   else
     trace "Backup failed (exit code $BACKUP_RC), skipping cleanup to preserve existing backups"
   fi

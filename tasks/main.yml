@@ -34,11 +34,21 @@
     name: pipx
     state: present
 
-- name: Ensure duplicity is installed
+- name: Ensure duplicity is installed (pinned version)
+  community.general.pipx:
+    name: duplicity
+    source: "duplicity=={{ duplicity_version }}"
+    global: true
+    state: install
+    force: true
+  when: duplicity_version | length > 0
+
+- name: Ensure duplicity is installed (latest, unpinned)
   community.general.pipx:
     name: duplicity
     global: true
     state: latest
+  when: duplicity_version | length == 0
 
 - name: Inject duplicity dependencies into pipx virtualenv
   community.general.pipx:
